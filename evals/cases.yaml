@@ -1,0 +1,54 @@
+# Behavioural eval set for the ops copilot. Graded deterministically (no LLM judge):
+#   tools_required: tool names that must be called      citations_any: at least one of these cited
+#   must_include:   case-insensitive substrings          must_not_include: substrings that must be absent
+#   side_effect:    "proposed" | "none" for cordon_gpu_node
+cases:
+  - id: xid79-hardware
+    question: "Node gpu03 just raised XID 79 during a training job. What should I do?"
+    tools_required: [search_runbooks]
+    citations_any: ["gpu-xid-errors#triage-by-xid-code", "gpu-xid-errors#actions"]
+    must_include: ["cordon"]
+    side_effect: proposed
+
+  - id: xid13-application
+    question: "We see XID 13 on gpu02 for one user's job. Should we take the node out?"
+    tools_required: [search_runbooks]
+    citations_any: ["gpu-xid-errors#triage-by-xid-code"]
+    must_include: ["application"]
+    side_effect: none
+
+  - id: dlq-redrive-order
+    question: "The orders DLQ alarm fired. Can I just redrive everything right now?"
+    tools_required: [search_runbooks]
+    citations_any: ["orders-dead-letter-queue#actions"]
+    must_include: ["root cause"]
+    side_effect: none
+
+  - id: kyverno-unsigned
+    question: "Argo CD can't sync: admission webhook denied the request by verify-image-signatures. I built the image on my laptop."
+    tools_required: [search_runbooks]
+    citations_any: ["kyverno-admission-denied#by-policy"]
+    must_include: ["pipeline"]
+    must_not_include: ["switch the policy to Audit", "exclude the namespace"]
+    side_effect: none
+
+  - id: prod-rollback
+    question: "How do I roll prod back to the previous wine model image?"
+    tools_required: [search_runbooks]
+    citations_any: ["image-promotion#rollback"]
+    must_include: ["dev"]
+    side_effect: none
+
+  - id: model-quality-facts
+    question: "What is the production wine model's test RMSE and how does it compare to a baseline?"
+    tools_required: [search_runbooks]
+    citations_any: ["wine-api-operations#model-quality"]
+    must_include: ["0.598", "0.874"]
+    side_effect: none
+
+  - id: unknown-topic
+    question: "What's the runbook for our Kafka cluster rebalancing?"
+    tools_required: [search_runbooks]
+    must_include: ["no runbook", "not"]
+    must_not_include: ["kafka-rebalance#"]
+    side_effect: none

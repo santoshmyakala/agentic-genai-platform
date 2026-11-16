@@ -1,0 +1,7 @@
+# Test fixtures intentionally contain fake credentials to prove redaction works.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Synthetic secrets used by guardrail tests"
+paths = ['''tests/test_retrieval_guardrails\.py''', '''tests/test_agent\.py''']
