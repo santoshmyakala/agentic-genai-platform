@@ -1,0 +1,34 @@
+- out: architecture
+  title: Ops Copilot — agentic AI for platform operations
+  subtitle: Claude agent loop with strict-schema tools, runbook retrieval, human approval for side effects, guardrails and eval gates
+  grid: {dx: 225, dy: 160}
+  groups:
+    - {id: tools, label: Tools, sub: strict schemas + Pydantic, icon: gear, color: purple, box: [3, 0, 4, 2]}
+    - {id: guard, label: Guardrails, icon: shield, color: green, box: [0, 2.35, 2, 2.35]}
+  nodes:
+    - {id: user, label: Operator, sub: chat · alert webhook, icon: user, at: [0, 1], color: gray}
+    - {id: api, label: FastAPI service, sub: POST /ask · limits, icon: fastapi, at: [1, 1], color: teal}
+    - {id: agent, label: Agent loop, sub: caching · refusal fallback, icon: agent, at: [2, 1], color: orange, pulse: true}
+    - {id: claude, label: Claude API, sub: Opus 5.5 · effort medium, icon: claude, at: [2, 0], color: orange}
+    - {id: evals, label: Eval set, sub: deterministic graders, icon: check, at: [1, 0], color: green}
+    - {id: prom, label: Prometheus, sub: tokens · cache · latency, icon: prometheus, at: [0, 0], color: orange}
+    - {id: rag, label: search_runbooks, sub: BM25 · citations, icon: search, at: [4, 0], color: purple}
+    - {id: gpu, label: get_gpu_health, sub: Prometheus · DCGM, icon: [nvidia, chart], at: [3, 0], color: nvidia}
+    - {id: ci, label: get_ci_status, sub: GitHub Actions allowlist, icon: githubactions, at: [3, 1], color: purple}
+    - {id: wine, label: predict_wine_quality, sub: model API, icon: model, at: [4, 1], color: purple}
+    - {id: cordon, label: cordon_gpu_node, sub: side effect, icon: alert, at: [3.5, 2], color: red}
+    - {id: kb, label: Runbooks, sub: knowledge/*.md, icon: doc, at: [5.2, 0], color: gray}
+    - {id: human, label: Human approval, sub: API never auto-approves, icon: user, at: [5.2, 2], color: red}
+    - {id: fence, label: Untrusted-data fencing, sub: every tool result, icon: lock, at: [0, 2.35], color: green}
+    - {id: redact, label: Secret redaction, sub: in and out, icon: key, at: [1, 2.35], color: green}
+    - {id: cap, label: Loop limits, sub: iteration cap · stop reasons, icon: deny, at: [2, 2.35], color: green}
+  edges:
+    - {from: user, to: api, label: question, kind: data}
+    - {from: api, to: agent, kind: data}
+    - {from: agent, to: claude, label: messages + tools, kind: secure, both: true}
+    - {from: agent, to: tools, label: tool_use / result, kind: data, both: true}
+    - {from: rag, to: kb, kind: data, packet: doc}
+    - {from: cordon, to: human, label: requires, kind: control}
+    - {from: agent, to: guard, kind: control}
+    - {from: api, to: prom, label: /metrics, kind: metrics}
+    - {from: evals, to: agent, label: regression gate, kind: control, at: 0.3}
