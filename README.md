@@ -18,8 +18,6 @@ It's built on the Claude API with client-side tools. The rest of the portfolio s
   <img alt="Ops Copilot: an operator asks the FastAPI service; the agent loop calls Claude with cached system prompt and strict tools: search_runbooks over runbooks, get_gpu_health, get_ci_status, predict_wine_quality, and cordon_gpu_node which requires human approval; guardrails fence untrusted data, redact secrets and cap iterations; Prometheus collects metrics and an eval set gates regressions." src="docs/diagrams/architecture-light.svg" width="100%">
 </picture>
 
-<sub>Animated diagram generated from <a href="docs/diagrams">docs/diagrams/*.yaml</a> with <a href="https://github.com/santoshmyakala/santoshmyakala/tree/main/tools/archdiagram">archdiagram</a>.</sub>
-
 ### One request, step by step
 
 ```mermaid
